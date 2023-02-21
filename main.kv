@@ -1,0 +1,90 @@
+#: import RiseInTransition kivy.uix.screenmanager.RiseInTransition
+#: import SlideTransition kivy.uix.screenmanager.SlideTransition
+#: import Snackbar kivymd.uix.snackbar.Snackbar
+
+<MainWindow>:
+    name:"main_w"
+    MDTopAppBar:
+        title: "Text Detection"
+        pos_hint: {"top": 1}
+
+
+    MDFillRoundFlatIconButton:
+        text: "Upload Image"
+        icon: "folder-image"
+        pos_hint: {"center_x": .5, "center_y": .6}
+        font_size: "15sp"
+        on_release:root.manager.current = 'upload_w'
+
+
+    MDFillRoundFlatIconButton:
+        text: "Capture Image"
+        icon: "camera"
+        pos_hint: {"center_x": .5, "center_y": .5}
+        font_size: "15sp"
+        on_release:root.manager.current = 'cam_w'
+
+
+<CamWindow>:
+    name: "cam_w"
+    MDBoxLayout:
+        orientation : "vertical"
+        MDTopAppBar:
+            title: "Text Detection"
+            pos_hint: {"top": 1}
+            left_action_items: [["arrow-left", lambda *args : setattr(root.manager, "current", "main_w")]]
+        Camera:
+            id: camera
+            play: False
+
+        MDFloatingActionButton:
+            icon: "camera"
+            pos_hint: {"center_x": .5}
+            on_release:
+                root.capture()
+
+
+<UploadWindow>
+    name: "upload_w"
+    MDTopAppBar:
+        title: "Text Detection"
+        pos_hint: {"top": 1}
+        left_action_items: [["arrow-left", lambda *args : setattr(root.manager, "current", "main_w")]]
+
+    MDRoundFlatIconButton:
+        text: 'Choose your image'
+        icon: 'folder'
+        pos_hint: {'center_x': .5, 'center_y': .5}
+        on_release: root.file_manager_open()
+
+
+<ConfirmImage>:
+    name:"conf_w"
+    MDBoxLayout:
+        orientation : "vertical"
+        MDTopAppBar:
+            title: "Text Detection"
+            pos_hint: {"top": 1}
+            left_action_items: [["arrow-left", lambda *args : setattr(root.manager, "current", "upload_w")]]
+        Image:
+            id:img
+            source:""
+        MDFillRoundFlatIconButton:
+            text: "Scan"
+            icon: "image-search"
+            pos_hint: {"center_x": .5}
+            font_size: "15sp"
+            on_release : root.manager.current="det_w"
+
+
+<TextDetection>:
+    name:"det_w"
+    MDBoxLayout:
+        orientation : "vertical"
+        MDTopAppBar:
+            title: "Text Detection"
+            pos_hint: {"top": 1}
+            left_action_items: [["home", lambda *args : setattr(root.manager, "current", "main_w")]]
+            right_action_items: [["content-copy", lambda x: x]]
+        MDTextFieldRect:
+            id:textresult
